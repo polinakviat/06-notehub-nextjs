@@ -1,36 +1,38 @@
+'use client';
+
+import ReactPaginate from 'react-paginate';
+import css from './Pagination.module.css';
+
 interface PaginationProps {
   pageCount: number;
   currentPage: number;
-  onPageChange: (page: number) => void;
+  onPageChange: (selectedPage: number) => void;
 }
 
-export const Pagination = ({
-  pageCount,
-  currentPage,
-  onPageChange,
-}: PaginationProps) => {
-  const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
+export function Pagination({ pageCount, currentPage, onPageChange }: PaginationProps) {
+  if (pageCount <= 1) return null;
 
   return (
-    <div style={{ display: 'flex', gap: '8px', marginTop: '20px', justifyContent: 'center' }}>
-      {pages.map((p) => (
-        <button
-          key={p}
-          type="button"
-          onClick={() => onPageChange(p)}
-          style={{
-            padding: '6px 12px',
-            fontWeight: currentPage === p ? 'bold' : 'normal',
-            backgroundColor: currentPage === p ? '#0070f3' : '#eee',
-            color: currentPage === p ? '#fff' : '#000',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
-        >
-          {p}
-        </button>
-      ))}
-    </div>
+    <ReactPaginate
+      pageCount={pageCount}
+      forcePage={currentPage - 1} 
+      onPageChange={(selectedItem) => onPageChange(selectedItem.selected + 1)}
+      pageRangeDisplayed={3}
+      marginPagesDisplayed={1}
+      previousLabel="← Prev"
+      nextLabel="Next →"
+      breakLabel="..."
+      containerClassName={css.pagination}
+      pageClassName={css.pageItem}
+      pageLinkClassName={css.pageLink}
+      previousClassName={css.pageItem}
+      previousLinkClassName={css.pageLink}
+      nextClassName={css.pageItem}
+      nextLinkClassName={css.pageLink}
+      breakClassName={css.pageItem}
+      breakLinkClassName={css.pageLink}
+      activeClassName={css.active}
+      disabledClassName={css.disabled}
+    />
   );
-};
+}
